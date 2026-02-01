@@ -135,3 +135,38 @@ analyze_mpg <- function(data, min_mpg, group_col) {
 
 # Example usage
 analyze_mpg(mtcars, 20, cyl)
+
+library(ggplot2)
+
+# Basic bar chart with labels
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "steelblue") +
+  labs(title = "Average MPG by Cylinder Count",
+       subtitle = "Data from mtcars dataset",
+       x = "Number of Cylinders",
+       y = "Average Miles per Gallon",
+       caption = "Source: R built-in mtcars dataset")
+
+# Custom colors for bars
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_bar(stat = "summary", fun = "mean") +
+  scale_fill_manual(values = c("4" = "forestgreen", "6" = "goldenrod", "8" = "firebrick")) +
+  labs(title = "Average MPG by Cylinder Count",
+       x = "Cylinders",
+       y = "Average MPG")
+
+# Using a clean theme
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "skyblue") +
+  labs(title = "Average MPG by Cylinder Count") +
+  theme_minimal(base_size = 14)
+
+# Try other themes: theme_classic(), theme_dark(), theme_light()
+# Bar chart with labels on bars
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  stat_summary(fun = "mean", geom = "bar", fill = "steelblue") +
+  stat_summary(fun = "mean", geom = "text", aes(label = round(..y.., 1)),
+               vjust = -0.5, color = "black") +
+  labs(title = "Average MPG by Cylinder Count",
+       x = "Cylinders",
+       y = "Average MPG")
