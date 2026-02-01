@@ -13,4 +13,22 @@
       "problemMatcher": []
     }
   ]
+},
+"terminal.integrated.profiles": {
+  "R": {
+    "path": "C:\\Program Files\\R\\R-4.5.2\\bin\\R.exe"
+  }
+},
+"terminal.integrated.defaultProfile.windows": "PowerShell"
+
+{
+  "label": "Render R Markdown",
+  "type": "shell",
+  "command": "C:\\Program Files\\R\\R-4.5.2\\bin\\R.exe",
+  "args": ["--no-save", "--no-restore", "-e", "rmarkdown::render('${file}')"],
+  "group": {
+    "kind": "build",
+    "isDefault": false
+  },
+  "problemMatcher": []
 }

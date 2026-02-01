@@ -1,0 +1,27 @@
+---
+title: "Data Analysis Report"
+author: "Charles Ajeigbe"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Introduction
+This report summarizes the analysis of the **mtcars** dataset.
+
+# Summary Statistics
+```{r} # nolint
+summary(mtcars$mpg)
+
+hist(mtcars$mpg,
+     main = "Distribution of MPG",
+     xlab = "Miles per Gallon",
+     col = "lightblue",
+     border = "black")
+
+library(ggplot2)
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "darkgreen") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Horsepower vs MPG",
+       x = "Horsepower",
+       y = "Miles per Gallon")

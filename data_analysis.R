@@ -1,256 +1,197 @@
-# Day 1 Starter in R
-# Load built-in dataset
+# -------------------------------
+# Day 1: Loading and Summarizing
+# -------------------------------
 data(mtcars)
 
 # View first few rows
 head(mtcars)
 
-# Summary statistics for mpg (miles per gallon)
+# Summary statistics for mpg
 summary(mtcars$mpg)
 
-# Mean and median
+# Mean, median, standard deviation
 mean(mtcars$mpg)
 median(mtcars$mpg)
-
-# Standard deviation
 sd(mtcars$mpg)
 
-# Histogram of mpg
+# Histogram
 hist(mtcars$mpg,
-    main = "Histogram of Miles per Gallon",
-    xlab = "MPG",
-    col = "lightblue",
-    border = "black")
+  main = "Histogram of Miles per Gallon", # nolint
+  xlab = "MPG",
+  col = "lightblue",
+  border = "black"
+)
 
-# Day 2 - Load dataset
-data(mtcars)
+# -------------------------------
+# Day 2: Filtering, Grouping, Bar Chart
+# -------------------------------
+library(dplyr) # nolint
+library(ggplot2)
 
-# Filter cars with mpg greater than 25
+# Filter cars with mpg > 25
 high_mpg <- subset(mtcars, mpg > 25)
-
-# Display results
 print(high_mpg)
 
-# Install dplyr if not already installed
-# install.packages("dplyr")
-
-library(dplyr)
-
-# Group by number of cylinders and calculate average mpg
-grouped_data <- mtcars %>%
-  group_by(cyl) %>%
+# Group by cylinders and calculate average mpg
+grouped_data <- mtcars %>% # nolint
+  group_by(cyl) %>% # nolint
   summarise(avg_mpg = mean(mpg))
-
 print(grouped_data)
 
-
-# Install ggplot2 if not already installed
-# install.packages("ggplot2")
-
-library(ggplot2)
-
-# Bar chart of average mpg by cylinder count
+# Bar chart
 ggplot(grouped_data, aes(x = factor(cyl), y = avg_mpg)) +
   geom_bar(stat = "identity", fill = "steelblue") +
-  labs(title = "Average MPG by Cylinder Count",
-       x = "Number of Cylinders",
-       y = "Average MPG")
+  labs(
+    title = "Average MPG by Cylinder Count",
+    x = "Number of Cylinders",
+    y = "Average MPG"
+  )
 
-# Day 3 - Load dataset
-data(mtcars)
-
-# Basic scatterplot
-plot(mtcars$hp, mtcars$mpg,
-     main = "Horsepower vs. MPG",
-     xlab = "Horsepower",
-     ylab = "Miles per Gallon",
-     pch = 19, col = "darkgreen")
-
-# Calculate correlation between horsepower and mpg
-cor(mtcars$hp, mtcars$mpg)
-
-# Correlation matrix for multiple variables
-cor(mtcars[, c("mpg", "hp", "wt", "disp")])
-
+# -------------------------------
+# Day 3: Scatterplots & Correlation
+# -------------------------------
+# Base R scatterplot
+library(dplyr)
 library(ggplot2)
 
-# Scatterplot with regression line
+plot(mtcars$hp, mtcars$mpg,
+  main = "Horsepower vs. MPG",
+  xlab = "Horsepower",
+  ylab = "Miles per Gallon",
+  pch = 19, col = "darkgreen"
+)
+
+# Correlation
+cor(mtcars$hp, mtcars$mpg)
+cor(mtcars[, c("mpg", "hp", "wt", "disp")])
+
+# ggplot scatterplot with regression line
 ggplot(mtcars, aes(x = hp, y = mpg)) +
   geom_point(color = "blue") +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
-  labs(title = "Horsepower vs. MPG with Regression Line",
-      x = "Horsepower",
-      y = "Miles per Gallon")
+  labs(
+    title = "Horsepower vs. MPG with Regression Line",
+    x = "Horsepower",
+    y = "Miles per Gallon"
+  )
 
-# Day 4 - Function to filter cars by minimum mpg
-filter_by_mpg <- function(data, min_mpg) {
-  subset(data, mpg > min_mpg)
-}
-
-# Example usage
-data(mtcars)
-high_mpg_cars <- filter_by_mpg(mtcars, 25)
-print(high_mpg_cars)
-
+# -------------------------------
+# Day 4: Reusable Functions
+# -------------------------------
 library(dplyr)
-
-# Function to group by a column and calculate average mpg
-group_avg_mpg <- function(data, group_col) {
-  data %>%
-    group_by({{ group_col }}) %>%
-    summarise(avg_mpg = mean(mpg))
-}
-
-# Example usage
-avg_by_cyl <- group_avg_mpg(mtcars, cyl)
-print(avg_by_cyl)
-
 library(ggplot2)
 
-# Function to plot average mpg by a grouping column
-plot_avg_mpg <- function(data, group_col) {
-  grouped <- data %>%
-    group_by({{ group_col }}) %>%
-    summarise(avg_mpg = mean(mpg))
-  
-  ggplot(grouped, aes(x = factor({{ group_col }}), y = avg_mpg)) +
-    geom_bar(stat = "identity", fill = "steelblue") +
-    labs(title = paste("Average MPG by", deparse(substitute(group_col))),
-         x = deparse(substitute(group_col)),
-         y = "Average MPG")
+filter_by_mpg <- function(data, min_mpg) {
+  subset(data, mpg > min_mpg) # nolint
 }
 
-# Example usage
-plot_avg_mpg(mtcars, cyl)
+group_avg_mpg <- function(data, group_col) {
+  data %>% # nolint
+    group_by({{ group_col }}) %>% # nolint
+    summarise(avg_mpg = mean(mpg)) # nolint
+}
+
+plot_avg_mpg <- function(data, group_col) {
+  grouped <- group_avg_mpg(data, {{ group_col }})
+  ggplot(grouped, aes(x = factor({{ group_col }}), y = avg_mpg)) + # nolint
+    geom_bar(stat = "identity", fill = "steelblue") +
+    labs(
+      title = paste("Average MPG by", deparse(substitute(group_col))),
+      x = deparse(substitute(group_col)),
+      y = "Average MPG"
+    )
+}
 
 analyze_mpg <- function(data, min_mpg, group_col) {
-  # Step 1: Filter
   filtered <- filter_by_mpg(data, min_mpg)
-  
-  # Step 2: Group and summarize
   summary <- group_avg_mpg(filtered, {{ group_col }})
   print(summary)
-  
-  # Step 3: Plot
   plot_avg_mpg(filtered, {{ group_col }})
 }
 
 # Example usage
 analyze_mpg(mtcars, 20, cyl)
 
-# Day 5 -- Adding Labels and Titles
+# -------------------------------
+# Day 5: Polished Visualizations
+# -------------------------------
+# Labels and titles
+library(dplyr)
 library(ggplot2)
 
-# Basic bar chart with labels
 ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   geom_bar(stat = "summary", fun = "mean", fill = "steelblue") +
-  labs(title = "Average MPG by Cylinder Count",
-      subtitle = "Data from mtcars dataset",
-      x = "Number of Cylinders",
-      y = "Average Miles per Gallon",
-      caption = "Source: R built-in mtcars dataset")
+  labs(
+    title = "Average MPG by Cylinder Count",
+    subtitle = "Data from mtcars dataset",
+    x = "Number of Cylinders",
+    y = "Average Miles per Gallon",
+    caption = "Source: R built-in mtcars dataset"
+  )
 
-# Custom colors for bars
+# Custom colors
 ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
   geom_bar(stat = "summary", fun = "mean") +
-  scale_fill_manual(values = c("4" = "forestgreen", "6" = "goldenrod", "8" = "firebrick")) +
-  labs(title = "Average MPG by Cylinder Count",
-      x = "Cylinders",
-      y = "Average MPG")
+  scale_fill_manual(values = c("4" = "forestgreen", "6" = "goldenrod", "8" = "firebrick")) + # nolint
+  labs(
+    title = "Average MPG by Cylinder Count",
+    x = "Cylinders",
+    y = "Average MPG"
+  )
 
-# Using a clean theme
+# Themes
 ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   geom_bar(stat = "summary", fun = "mean", fill = "skyblue") +
   labs(title = "Average MPG by Cylinder Count") +
   theme_minimal(base_size = 14)
 
-# Try other themes: theme_classic(), theme_dark(), theme_light()
-# Bar chart with labels on bars
+# Labels on bars
 ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   stat_summary(fun = "mean", geom = "bar", fill = "steelblue") +
-  stat_summary(fun = "mean", geom = "text", aes(label = round(..y.., 1)),
-              vjust = -0.5, color = "black") +
-  labs(title = "Average MPG by Cylinder Count",
-      x = "Cylinders",
-      y = "Average MPG")
+  stat_summary(
+    fun = "mean", geom = "text", aes(label = round(..y.., 1)),
+    vjust = -0.5, color = "black"
+  ) +
+  labs(
+    title = "Average MPG by Cylinder Count",
+    x = "Cylinders",
+    y = "Average MPG"
+  )
 
-# Day 6 - Multiple Visualization (Histogram, Scatterplot, Bar Chart)
+# -------------------------------
+# Day 6: Multiple Visualizations
+# -------------------------------
+library(dplyr)
 library(ggplot2)
 
-# Histogram of mpg
 hist_plot <- ggplot(mtcars, aes(x = mpg)) +
   geom_histogram(binwidth = 2, fill = "skyblue", color = "black") +
   labs(title = "Distribution of MPG", x = "Miles per Gallon", y = "Count") +
   theme_minimal()
 
-# Scatterplot of horsepower vs mpg
 scatter_plot <- ggplot(mtcars, aes(x = hp, y = mpg)) +
   geom_point(color = "darkgreen") +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(title = "Horsepower vs MPG", x = "Horsepower", y = "Miles per Gallon") +
   theme_classic()
 
-# Bar chart of average mpg by cylinder
 bar_plot <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   stat_summary(fun = "mean", geom = "bar", fill = "steelblue") +
-  labs(title = "Average MPG by Cylinder Count", x = "Cylinders", y = "Average MPG") +
+  labs(title = "Average MPG by Cylinder Count", x = "Cylinders", y = "Average MPG") + # nolint
   theme_light()
 
-# Install patchwork if needed
-# install.packages("patchwork")
-
 library(patchwork)
-
-# Combine plots side by side
 (hist_plot | scatter_plot) / bar_plot
 
-# Install gridExtra if needed
-# install.packages("gridExtra")
-
 library(gridExtra)
-
-# Arrange plots in a grid
 grid.arrange(hist_plot, scatter_plot, bar_plot, ncol = 2)
 
-# Day 7 - Installation and Loading R Markdown
-# Install if not already installed
-install.packages("rmarkdown")
-
-library(rmarkdown)
-
----
-title: "Data Analysis Report"
-author: "Charles"
-date: "`r Sys.Date()`"
-output: html_document
----
-
-# Introduction
-This report summarizes the analysis of the **mtcars** dataset.
-
-# Summary Statistics
-```{r}
-summary(mtcars$mpg)
-
-hist(mtcars$mpg,
-     main = "Distribution of MPG",
-     xlab = "Miles per Gallon",
-     col = "lightblue",
-     border = "black")
-
+# -------------------------------
+# Day 7: Reporting with R Markdown
+# -------------------------------
+# Create report.Rmd separately with text + code chunks
+# Render with:
+library(dplyr)
 library(ggplot2)
-ggplot(mtcars, aes(x = hp, y = mpg)) +
-  geom_point(color = "darkgreen") +
-  geom_smooth(method = "lm", se = FALSE, color = "red") +
-  labs(title = "Horsepower vs MPG",
-       x = "Horsepower",
-       y = "Miles per Gallon")
 
-
----
-
-## 3. Render the Report
-Run this in R:
-
-```r
-rmarkdown::render("report.Rmd")
+rmarkdown::render("report.Rmd") # nolint
