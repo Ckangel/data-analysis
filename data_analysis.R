@@ -79,3 +79,59 @@ ggplot(mtcars, aes(x = hp, y = mpg)) +
   labs(title = "Horsepower vs. MPG with Regression Line",
        x = "Horsepower",
        y = "Miles per Gallon")
+
+# Function to filter cars by minimum mpg
+filter_by_mpg <- function(data, min_mpg) {
+  subset(data, mpg > min_mpg)
+}
+
+# Example usage
+data(mtcars)
+high_mpg_cars <- filter_by_mpg(mtcars, 25)
+print(high_mpg_cars)
+
+library(dplyr)
+
+# Function to group by a column and calculate average mpg
+group_avg_mpg <- function(data, group_col) {
+  data %>%
+    group_by({{ group_col }}) %>%
+    summarise(avg_mpg = mean(mpg))
+}
+
+# Example usage
+avg_by_cyl <- group_avg_mpg(mtcars, cyl)
+print(avg_by_cyl)
+
+library(ggplot2)
+
+# Function to plot average mpg by a grouping column
+plot_avg_mpg <- function(data, group_col) {
+  grouped <- data %>%
+    group_by({{ group_col }}) %>%
+    summarise(avg_mpg = mean(mpg))
+  
+  ggplot(grouped, aes(x = factor({{ group_col }}), y = avg_mpg)) +
+    geom_bar(stat = "identity", fill = "steelblue") +
+    labs(title = paste("Average MPG by", deparse(substitute(group_col))),
+         x = deparse(substitute(group_col)),
+         y = "Average MPG")
+}
+
+# Example usage
+plot_avg_mpg(mtcars, cyl)
+
+analyze_mpg <- function(data, min_mpg, group_col) {
+  # Step 1: Filter
+  filtered <- filter_by_mpg(data, min_mpg)
+  
+  # Step 2: Group and summarize
+  summary <- group_avg_mpg(filtered, {{ group_col }})
+  print(summary)
+  
+  # Step 3: Plot
+  plot_avg_mpg(filtered, {{ group_col }})
+}
+
+# Example usage
+analyze_mpg(mtcars, 20, cyl)
