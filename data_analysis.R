@@ -209,3 +209,46 @@ library(gridExtra)
 
 # Arrange plots in a grid
 grid.arrange(hist_plot, scatter_plot, bar_plot, ncol = 2)
+
+# Day 7
+# Install if not already installed
+install.packages("rmarkdown")
+
+library(rmarkdown)
+
+---
+title: "Data Analysis Report"
+author: "Charles"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Introduction
+This report summarizes the analysis of the **mtcars** dataset.
+
+# Summary Statistics
+```{r}
+summary(mtcars$mpg)
+
+hist(mtcars$mpg,
+     main = "Distribution of MPG",
+     xlab = "Miles per Gallon",
+     col = "lightblue",
+     border = "black")
+
+library(ggplot2)
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "darkgreen") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Horsepower vs MPG",
+       x = "Horsepower",
+       y = "Miles per Gallon")
+
+
+---
+
+## 3. Render the Report
+Run this in R:
+
+```r
+rmarkdown::render("report.Rmd")
