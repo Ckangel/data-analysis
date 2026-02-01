@@ -53,3 +53,29 @@ ggplot(grouped_data, aes(x = factor(cyl), y = avg_mpg)) +
   labs(title = "Average MPG by Cylinder Count",
        x = "Number of Cylinders",
        y = "Average MPG")
+
+# Load dataset
+data(mtcars)
+
+# Basic scatterplot
+plot(mtcars$hp, mtcars$mpg,
+     main = "Horsepower vs. MPG",
+     xlab = "Horsepower",
+     ylab = "Miles per Gallon",
+     pch = 19, col = "darkgreen")
+
+# Calculate correlation between horsepower and mpg
+cor(mtcars$hp, mtcars$mpg)
+
+# Correlation matrix for multiple variables
+cor(mtcars[, c("mpg", "hp", "wt", "disp")])
+
+library(ggplot2)
+
+# Scatterplot with regression line
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Horsepower vs. MPG with Regression Line",
+       x = "Horsepower",
+       y = "Miles per Gallon")
