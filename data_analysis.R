@@ -42,6 +42,7 @@ grouped_data <- mtcars %>%
 
 print(grouped_data)
 
+# DAY 
 # Install ggplot2 if not already installed
 # install.packages("ggplot2")
 
@@ -133,7 +134,7 @@ analyze_mpg <- function(data, min_mpg, group_col) {
   plot_avg_mpg(filtered, {{ group_col }})
 }
 
-# Example usage
+# Day 5 -- Example usage
 analyze_mpg(mtcars, 20, cyl)
 
 library(ggplot2)
@@ -170,3 +171,41 @@ ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
   labs(title = "Average MPG by Cylinder Count",
        x = "Cylinders",
        y = "Average MPG")
+
+# Day 6 
+library(ggplot2)
+
+# Histogram of mpg
+hist_plot <- ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 2, fill = "skyblue", color = "black") +
+  labs(title = "Distribution of MPG", x = "Miles per Gallon", y = "Count") +
+  theme_minimal()
+
+# Scatterplot of horsepower vs mpg
+scatter_plot <- ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "darkgreen") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(title = "Horsepower vs MPG", x = "Horsepower", y = "Miles per Gallon") +
+  theme_classic()
+
+# Bar chart of average mpg by cylinder
+bar_plot <- ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  stat_summary(fun = "mean", geom = "bar", fill = "steelblue") +
+  labs(title = "Average MPG by Cylinder Count", x = "Cylinders", y = "Average MPG") +
+  theme_light()
+
+# Install patchwork if needed
+# install.packages("patchwork")
+
+library(patchwork)
+
+# Combine plots side by side
+(hist_plot | scatter_plot) / bar_plot
+
+# Install gridExtra if needed
+# install.packages("gridExtra")
+
+library(gridExtra)
+
+# Arrange plots in a grid
+grid.arrange(hist_plot, scatter_plot, bar_plot, ncol = 2)
