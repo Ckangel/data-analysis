@@ -16,10 +16,10 @@ sd(mtcars$mpg)
 
 # Histogram of mpg
 hist(mtcars$mpg,
-     main = "Histogram of Miles per Gallon",
-     xlab = "MPG",
-     col = "lightblue",
-     border = "black")
+    main = "Histogram of Miles per Gallon",
+    xlab = "MPG",
+    col = "lightblue",
+    border = "black")
 
 # Load dataset
 data(mtcars)
@@ -41,3 +41,15 @@ grouped_data <- mtcars %>%
   summarise(avg_mpg = mean(mpg))
 
 print(grouped_data)
+
+# Install ggplot2 if not already installed
+# install.packages("ggplot2")
+
+library(ggplot2)
+
+# Bar chart of average mpg by cylinder count
+ggplot(grouped_data, aes(x = factor(cyl), y = avg_mpg)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Average MPG by Cylinder Count",
+       x = "Number of Cylinders",
+       y = "Average MPG")
