@@ -13,7 +13,7 @@ The software showcases how to:
 
 My purpose in writing this software was to strengthen my skills in data analysis, visualization, and reproducible reporting. It also serves as a foundation for future projects where R can be applied to real-world datasets.  
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/M1A6NvAymTQ)
 
 ---
 
